@@ -1,0 +1,692 @@
+﻿using System.Text;
+using System.Runtime.Serialization.Json;
+using Newtonsoft.Json;
+
+namespace ws2Parse
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            //var encoding = Encoding.GetEncoding("unicode");
+            var BaseBame = @"E:\GalGames_Work\OnWork\ココロ＠ファンクション！\RIO\cocoro_com_001";
+            var script = File.ReadAllBytes(BaseBame + ".ws2.old");
+            
+            List<CLegacyFunctions.Command> script_commands = new List<CLegacyFunctions.Command>();
+
+            var veip = 0;
+            while( veip < script.Length )
+            {
+                //var offset = veip;
+                var command = script[veip++];
+                if (command == 0xFF)
+                {
+                    Console.WriteLine("Code ends.");
+                    break;
+                }
+                //var arg_list = CLegacyFunctions.GetArgs(command, script, ref veip);
+                script_commands.Add(new CLegacyFunctions.Command(ref veip, command, script));
+            }
+            using (StreamWriter sw = new StreamWriter(BaseBame + ".json"))
+            {
+                sw.WriteLine(JsonConvert.SerializeObject(script_commands, Formatting.Indented));
+                sw.Flush();
+                sw.Close();
+            }
+            using (StreamWriter sw = new StreamWriter(BaseBame + ".txt"))
+            {
+                sw.WriteLine(CLegacyFunctions.Decompile(script_commands));
+                sw.Flush();
+                sw.Close();
+            }
+            for(var i = 0; i < script.Length; ++i)
+            {
+                script[i] = (byte)((byte)(script[i] >> 6) | (byte)(script[i] << 2));
+            }
+            File.WriteAllBytes(BaseBame + ".ws2", script);
+        }
+
+
+
+    }
+    public static class CLegacyFunctions
+    {
+        public class Arg
+        {
+            public string type;
+            AT etype;
+            public object data;
+
+            public Arg(AT type, object data)
+            {
+                etype = type;
+                this.type = type.ToString();
+                this.data = data;
+            }
+
+            public Arg(AT type, int count, object data)
+            {
+                etype = type;
+                this.type = string.Format("{0}[{1}]", type.ToString(), count); ;
+                this.data = data;
+            }
+
+            public AT GetArgType()
+            {
+                return etype;
+            }
+        }
+
+        public class Command
+        {
+            public int offset;
+            public int op;
+            public string name;
+            public List<Arg> args;
+
+            public Command(ref int veip, byte op, byte[] script)
+            {
+                offset = veip;
+                this.op = op;
+                args = GetArgs(op, script, ref veip);
+                name = GetFunctionName(op);
+            }
+        }
+
+        public enum AT
+        {
+            U0 = 0,
+            U1 = 1,
+            U2 = 2,
+            U3 = 3,
+            U4 = 4,
+            U5 = 5,
+            U6 = 6,
+            U7 = 7,
+            U8 = 8,
+            U9 = 9,
+            UA = 0x0A,
+            ARG_END = 0xFF
+        }
+
+        static readonly AT[][] func_args = new AT[256][]
+        {
+            new AT[]{ 0xFF },
+            new AT[]{ 0, 1, 5, 4, 4, 0xFF },//JX
+            new AT[]{ 4, 0xFF },//JMP
+            Array.Empty<AT>(),
+            new AT[]{ 0x0A, 8, 0xFF },
+            new AT[]{ 0xFF },
+            new AT[]{ 4, 0xFF },//JMP
+            new AT[]{ 0x0A, 8, 0xFF },
+            new AT[]{ 0, 0xFF },
+            new AT[]{ 0, 1, 5, 0xFF },
+            new AT[]{ 1, 5, 0xFF },
+            new AT[]{ 1, 0, 0xFF },
+            new AT[]{ 1, 0, 7, 1, 0xFF },
+            new AT[]{ 1, 1, 5, 0xFF },
+            new AT[]{ 1, 1, 0, 0xFF },
+            new AT[]{ 0, 0xFF },
+            Array.Empty<AT>(),
+            new AT[]{ 6, 8, 5, 0xFF },//17-6805 FF
+            new AT[]{ 6, 8, 0, 0x0A, 8, 0xFF },
+            new AT[]{ 0xFF },
+            new AT[]{ 4, 6, 8, 6, 8, 0xFF },//20-468680 FF
+            new AT[]{ 6, 8, 0xFF },//21-680 FF
+            new AT[]{ 0, 0xFF },//22-00 FF
+            new AT[]{ 0xFF },
+            new AT[]{ 0, 6, 8, 0xFF },
+            new AT[]{ 0xFF },
+            new AT[]{ 6, 8, 0xFF },
+            new AT[]{ 0, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 1, 0, 0xFF },
+            new AT[]{ 1, 0xFF },
+            new AT[]{ 6, 8, 0x0A, 8, 5, 5, 1, 1, 0, 0xFF },//30-68A8551105 FF
+            new AT[]{ 6, 8, 5, 0xFF },
+            new AT[]{ 6, 8, 5, 1, 0xFF },
+            new AT[]{ 6, 8, 1, 1, 1, 0xFF },
+            new AT[]{ 6, 8, 0, 0xFF },
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            new AT[]{ 6, 8, 0x0A, 8, 5, 5, 1, 1, 0, 1, 1, 0, 0xFF },//40-68A8551101105 FF
+            new AT[]{ 6, 8, 5, 0xFF },
+            new AT[]{ 6, 8, 5, 1, 0xFF },
+            new AT[]{ 6, 8, 0xFF },
+            new AT[]{ 6, 8, 0xFF },
+            new AT[]{ 6, 8, 0, 0xFF },
+            new AT[]{ 0xFF },
+            new AT[]{ 6, 8, 1, 5, 0xFF },
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            new AT[]{ 0x0A, 8, 0xFF },
+            new AT[]{ 6, 8, 0x0A, 8, 0, 0, 0xFF },
+            new AT[]{ 6, 8, 0x0A, 8, 0, 0, 0xFF },
+            new AT[]{ 6, 8, 0x0A, 8, 0, 0, 0, 0xFF },
+            new AT[]{ 6, 8, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0xFF },
+            new AT[]{ 6, 8, 0xFF },
+            new AT[]{ 6, 8, 0, 0xFF },
+            new AT[]{ 6, 8, 0, 0, 7, 1, 0xFF },
+            new AT[]{ 6, 8, 0, 0, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 0xFF },
+            new AT[]{ 6, 8, 0xFF },
+            new AT[]{ 1, 0xFF },
+            new AT[]{ 0xFF },
+            new AT[]{ 7, 6, 0xFF },//string arr
+            new AT[]{ 6, 8, 0x0A, 8, 0, 0xFF },
+            new AT[]{ 6, 8, 0, 0xFF },
+            new AT[]{ 6, 8, 1, 0xFF },
+            new AT[]{ 6, 8, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 0, 0xFF },
+            new AT[]{ 6, 8, 1, 5, 5, 5, 5, 0xFF },
+            new AT[]{ 6, 8, 1, 0, 5, 5, 5, 5, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 1, 0, 0, 5, 5, 5, 5, 5, 1, 5, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 1, 0, 0, 0x0A, 8, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 0x0A, 8, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 0xFF },
+            new AT[]{ 6, 8, 1, 1, 5, 5, 5, 5, 0xFF },
+            new AT[]{ 6, 8, 1, 1, 0, 5, 5, 5, 5, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 1, 1, 0, 0, 5, 5, 5, 5, 5, 1, 5, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 1, 1, 0, 0, 0x0A, 8, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 1, 0x0A, 8, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 1, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 1, 5, 0, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 5, 1, 5, 0, 0x0A, 8, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 0x0A, 8, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 0xFF },
+            new AT[]{ 6, 8, 0, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 5, 5, 5, 5, 0, 1, 6, 8, 1, 6, 8, 0x0A, 8, 5, 0xFF },
+            new AT[]{ 6, 8, 1, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 1, 0xFF },
+            new AT[]{ 6, 8, 7, 1, 0xFF },
+            new AT[]{ 6, 8, 1, 0, 0xFF },
+            new AT[]{ 6, 8, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 0,0xFF },
+            new AT[]{ 6, 8, 5, 5, 0xFF },
+            Array.Empty<AT>(),//95-A8 FF
+            Array.Empty<AT>(),//96-1111 FF
+            Array.Empty<AT>(),//97-05555 FF
+            Array.Empty<AT>(),//98-68 FF
+            Array.Empty<AT>(),//99-680 FF
+            new AT[]{ 0, 0xFF },
+            new AT[]{ 1, 0, 5, 5, 0, 0x0A, 8, 0xFF },
+            new AT[]{ 0x0A, 8, 0xFF },
+            new AT[]{ 0, 0, 1, 5, 5, 5, 5, 5, 0, 0xFF },
+            new AT[]{ 0, 0xFF },
+            Array.Empty<AT>(),//105-68005555515 FF
+            Array.Empty<AT>(),//106-68100A8 FF
+            Array.Empty<AT>(),//107-6868 FF
+            Array.Empty<AT>(),//108-6855 FF
+            Array.Empty<AT>(),
+            new AT[]{ 9, 8, 9, 8, 0xFF },//110-9868 FF
+            new AT[]{ 9, 8, 0xFF },
+            new AT[]{ 9, 8, 1, 0xFF },
+            new AT[]{ 0xFF },
+            new AT[]{ 9, 8, 1, 1, 9, 8, 0xFF },
+            new AT[]{ 9, 8, 9, 8, 1, 0xFF },
+            new AT[]{ 9, 8, 9, 8, 0xFF },
+            new AT[]{ 9, 8, 6, 8, 0xFF },
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            new AT[]{ 6, 8, 0x0A, 8, 0, 0, 0xFF },//120-68A8000 FF
+            new AT[]{ 6, 8, 6, 8, 5, 0xFF },
+            new AT[]{ 6, 8, 0x0A, 8, 5, 0, 0, 0x0A, 8, 0xFF },
+            new AT[]{ 6, 8, 0x0A, 8, 0xFF },
+            new AT[]{ 6, 8, 6, 8, 5, 0xFF },
+            new AT[]{ 6, 8, 5, 0xFF },
+            new AT[]{ 6, 8, 0xFF },
+#region unused
+            Array.Empty<AT>(),//127-6855555 FF
+            Array.Empty<AT>(),//128-68 FF
+            Array.Empty<AT>(),//129-680A8550 FF
+            Array.Empty<AT>(),//130-68A85 FF
+            Array.Empty<AT>(),//131-686855 FF
+            Array.Empty<AT>(),//132-686868515 FF
+            Array.Empty<AT>(),//133-686805 FF
+            Array.Empty<AT>(),//134-68555 FF
+            Array.Empty<AT>(),//135-685 FF
+            Array.Empty<AT>(),//136-686868515 FF
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),//140-68A86800 FF
+            Array.Empty<AT>(),//141-4686800A8 FF
+            Array.Empty<AT>(),//142-4686800A8 FF
+            Array.Empty<AT>(),//143-68A8 FF
+            Array.Empty<AT>(),//144-68 FF
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),//150-15555 FF
+            Array.Empty<AT>(),//151-105555 FF
+            Array.Empty<AT>(),//152-681005555515 FF
+            Array.Empty<AT>(),//153-68100A8 FF
+            Array.Empty<AT>(),//154-FF
+            Array.Empty<AT>(),//155-68 FF
+            Array.Empty<AT>(),//156-68A8 FF
+            Array.Empty<AT>(),//157-68 FF
+            Array.Empty<AT>(),//158-680 FF
+            Array.Empty<AT>(),//159-680 FF
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),//200-FF
+            Array.Empty<AT>(),//201-68681111 FF
+            Array.Empty<AT>(),//202-6868 FF
+            Array.Empty<AT>(),//203-6800 FF
+            Array.Empty<AT>(),//204-FF
+            Array.Empty<AT>(),//205-686868686850 FF
+            Array.Empty<AT>(),//206-0 FF
+            Array.Empty<AT>(),//207-68685 FF
+            Array.Empty<AT>(),//208-681 FF
+            Array.Empty<AT>(),//209-681 FF
+            Array.Empty<AT>(),//210-68 FF
+            Array.Empty<AT>(),//211-68 FF
+            Array.Empty<AT>(),//212-A811 FF
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),//230-44 FF
+            Array.Empty<AT>(),//231-FF
+            Array.Empty<AT>(),//232-FF
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),//240-0 FF
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+            Array.Empty<AT>(),
+#endregion unused
+            new AT[] { 0xFF },
+            new AT[] { 0, 0x0A, 8, 0xFF },
+            new AT[] { 0xFF },
+            new AT[] { 0, 0xFF },
+            new AT[] { 1, 0xFF },
+            new AT[] { 0xFF },
+            new AT[] { 6, 8, 0xFF }, 
+            Array.Empty<AT>()//ScriptEnd
+        };
+
+        static readonly Dictionary<int, string> func_name = new Dictionary<int, string>()
+        {
+            { 0x01, "//JX( byte flag, short unk1, float unk2, uint dest1, uint dest2 );\nJX" },
+            { 0x02, "//JMP( uint dest );\nJMP" },
+            { 0x04, "//CallFunc( string script_name );\nCallFunc" },
+            { 0x05, "Return" },
+            { 0x06, "//JMP( uint dest );\nJMP" },
+            { 0x07, "//CallScript( string script_name );\nCallScript" },
+            { 0x14, "//Message( uint index, string type? string text );\nMessage" },
+            { 0x15, "//SetName( string name );\nSetName" }
+        };
+        
+        class Argstruc
+        {
+            public string? closure;
+            public string? arrdef;
+        }
+
+        static string GetFunctionName(int op)
+        {
+            if (func_name.ContainsKey(op))
+                return func_name[op];
+            else
+                return $"F_{op:X2}";
+        }
+
+        public static string Decompile(List<Command> commands)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (Command cmd in commands)
+            {
+                var tmp = ParseArgs(cmd.args);
+                sb.Append(tmp.arrdef);
+                sb.Append(cmd.name);
+                sb.Append(tmp.closure);
+                sb.Append('\n');
+            }
+            return sb.ToString();
+        }
+
+        static Argstruc ParseArgs(List<Arg> args)
+        {
+            StringBuilder sb = new StringBuilder();
+            Argstruc struc = new Argstruc();
+            sb.Append("( ");
+            int arrc = 0;
+            foreach (var arg in args)
+            {
+                if(arg.GetArgType() != 7)
+                {
+                    if(arg.GetArgType() == 6 || arg.GetArgType() == 9 || arg.GetArgType() == 0x0A)
+                    {
+                        sb.Append(string.Format("\"{0}\", ", arg.data));
+                    }
+                    else
+                    {
+                        sb.Append(string.Format("{0}, ", arg.data));
+                    }
+                }
+                else
+                {
+                    StringBuilder sb2 = new StringBuilder();
+                    
+                    if(arg.data.GetType() == typeof(List<byte>))
+                    {
+                        if (arg.data is List<byte> tdata)
+                        {
+                            sb2.Append(string.Format("byte a{0}[{1}] = {{ ", arrc, tdata.Count));
+                            foreach (var t in tdata)
+                            {
+                                sb2.Append(string.Format("{0}, ", t));
+                            }
+                        }
+                    }
+                    else if(arg.data.GetType() == typeof(List<short>))
+                    {
+                        if (arg.data is List<short> tdata)
+                        {
+                            sb2.Append(string.Format("short a{0}[{1}] = {{ ", arrc, tdata.Count));
+                            foreach (var t in tdata)
+                            {
+                                sb2.Append(string.Format("{0}, ", t));
+                            }
+                        }
+                    }
+                    else if(arg.data.GetType() == typeof(List<ushort>))
+                    {
+                        if (arg.data is List<ushort> tdata)
+                        {
+                            sb2.Append(string.Format("unsigned short a{0}[{1}] = {{ ", arrc, tdata.Count));
+                            foreach (var t in tdata)
+                            {
+                                sb2.Append(string.Format("{0}, ", t));
+                            }
+                        }
+                    }
+                    else if(arg.data.GetType() == typeof(List<float>))
+                    {
+                        if (arg.data is List<float> tdata)
+                        {
+                            sb2.Append(string.Format("float a{0}[{1}] = {{ ", arrc, tdata.Count));
+                            foreach (var t in tdata)
+                            {
+                                sb2.Append(string.Format("{0}, ", t));
+                            }
+                        }
+                    }
+                    else if(arg.data.GetType() == typeof(List<int>))
+                    {
+                        if (arg.data is List<int> tdata)
+                        {
+                            sb2.Append(string.Format("int a{0}[{1}] = {{ ", arrc, tdata.Count));
+                            foreach (var t in tdata)
+                            {
+                                sb2.Append(string.Format("{0}, ", t));
+                            }
+                        }
+                    }
+                    else if(arg.data.GetType() == typeof(List<uint>))
+                    {
+                        if (arg.data is List<uint> tdata)
+                        {
+                            sb2.Append(string.Format("unsigned int a{0}[{1}] = {{ ", arrc, tdata.Count));
+                            foreach(var t in tdata)
+                            {
+                                sb2.Append(string.Format("{0}, ", t));
+                            }
+                        }
+                    }
+                    else if(arg.data.GetType() == typeof(List<string>))
+                    {
+                        if (arg.data is List<string> tdata)
+                        {
+                            sb2.Append(string.Format("string a{0}[{1}] = {{ ", arrc, tdata.Count));
+                            foreach (var s in tdata)
+                            {
+                                sb2.Append(string.Format("\"{0}\", ", s));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("type of arg.data is not valid");
+                    }
+                    sb.Append(string.Format("a{0}, ", arrc));
+                    arrc++;
+                    if (struc.arrdef != null)
+                    {
+                        struc.arrdef += sb2.ToString().TrimEnd(new char[] { ' ', ',' }) + " };\n";
+                    }
+                    else
+                    {
+                        struc.arrdef = sb2.ToString().TrimEnd(new char[] { ' ', ',' }) + " };\n";
+                    }
+                }
+            }
+            struc.closure = sb.ToString().TrimEnd(new char[] { ' ', ',' }) + " );\n";
+            return struc;
+        }
+
+        static List<Arg> GetArgs(byte command, byte[] script, ref int veip)
+        {
+            var args = func_args[command];
+            var encoding = Encoding.GetEncoding("shift_jis");
+            List<Arg> ret = new List<Arg>();
+            for(var argi = 0; argi < args.Length; ++argi)
+            {
+                var arg = args[argi];
+                if (arg == 0xFF)
+                {
+                    break;
+                }
+                switch (arg)
+                {
+                    case 0:
+                        ret.Add(new Arg(arg, script[veip++]));
+                        break;
+                    case 8:     //for null-terminated str's '\0' ?
+                        veip++;
+                        break;
+                    case 1:
+                        ret.Add(new Arg(arg, BitConverter.ToInt16(script, veip)));
+                        veip += 2;
+                        break;
+                    case AT.U2:
+                        ret.Add(new Arg(arg, BitConverter.ToUInt16(script, veip)));
+                        veip += 2;
+                        break;
+                    case AT.U3:
+                        ret.Add(new Arg(arg, BitConverter.ToInt32(script, veip)));
+                        veip += 4;
+                        break;
+                    case 4:
+                        ret.Add(new Arg(arg, BitConverter.ToUInt32(script, veip)));
+                        veip += 4;
+                        break;
+                    case 5:
+                        ret.Add(new Arg(arg, BitConverter.ToSingle(script, veip)));
+                        veip += 4;
+                        break;
+                    case 6:
+                    case 9:
+                    case 0x0A:
+                    {
+                        var length = strlen(script, veip);
+                        var bin_arg = new byte[length - 1];
+                        Array.Copy(script, veip, bin_arg, 0, bin_arg.Length);
+                        ret.Add(new Arg(arg, encoding.GetString(bin_arg)));
+                        veip += bin_arg.Length;
+                        break;
+                    }
+                    case 7:
+                    {
+                        var array_length = script[veip++];
+                        argi++;
+                        var elem_type = args[argi];
+                        switch(elem_type)
+                        {
+                            case 0:
+                            {
+                                List<byte> array_val = new List<byte>();
+                                for (var i = 0; i < array_length; i++)
+                                {
+                                    array_val.Add(script[veip++]);
+                                }
+                                ret.Add(new Arg(arg, array_length, array_val));
+                                break;
+                            }
+                            case 1:
+                            {
+                                List<short> array_val = new List<short>();
+                                for (var i = 0; i < array_length; i++)
+                                {
+                                    array_val.Add(BitConverter.ToInt16(script, veip));
+                                    veip += 2;
+                                }
+                                ret.Add(new Arg(arg, array_length, array_val));
+                                break;
+                            }
+                            case AT.U2:
+                            {
+                                List<ushort> array_val = new List<ushort>();
+                                for (var i = 0; i < array_length; i++)
+                                {
+                                    array_val.Add(BitConverter.ToUInt16(script, veip));
+                                    veip += 2;
+                                }
+                                ret.Add(new Arg(arg, array_length, array_val));
+                                break;
+                            }
+                            case 5:
+                            {
+                                List<float> array_val = new List<float>();
+                                for (var i = 0; i < array_length; i++)
+                                {
+                                    array_val.Add(BitConverter.ToSingle(script, veip));
+                                    veip += 4;
+                                }
+                                ret.Add(new Arg(arg, array_length, array_val));
+                                break;
+                            }
+                            case 4:
+                            {
+                                List<uint> array_val = new List<uint>();
+                                for (var i = 0; i < array_length; i++)
+                                {
+                                    array_val.Add(BitConverter.ToUInt32(script, veip));
+                                    veip += 4;
+                                }
+                                ret.Add(new Arg(arg, array_length, array_val));
+                                break;
+                            }
+                            case AT.U3:
+                            {
+                                List<int> array_val = new List<int>();
+                                for (var i = 0; i < array_length; i++)
+                                {
+                                    array_val.Add(BitConverter.ToInt32(script, veip));
+                                    veip += 4;
+                                }
+                                ret.Add(new Arg(arg, array_length, array_val));
+                                break;
+                            }
+                            case 6:
+                            case 9:
+                            case 0x0A:
+                            {
+                                List<string> array_val = new List<string>();
+                                for (var i = 0; i < array_length; i++)
+                                {
+                                    var length = strlen(script, veip);
+                                    var bin_arg = new byte[length - 1];
+                                    Array.Copy(script, veip, bin_arg, 0, bin_arg.Length);
+                                    array_val.Add(encoding.GetString(bin_arg));
+                                    veip += bin_arg.Length + 1;
+                                }
+                                ret.Add(new Arg(arg, array_length, array_val));
+                                break;
+                            }
+                            default:
+                                throw new Exception(string.Format("Invalid Array Type:{0}", elem_type));
+                        }
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+            return ret;
+        }
+        static int strlen(byte[] input, int offset)
+        {
+            var i = 0;
+            while (input[offset + i++] != '\0') ;
+            return i;
+        }
+    }
+}
