@@ -13,9 +13,9 @@ Currently, it implements the following features:
 
 Notice that different versions of AdvHD are not the same in terms of instructions, for example, the newer version will likely add some instructions or modify some existing instructions, so it's necessary to figure out the difference between them. 
 
-#### Some details about the `.ws2 `
+#### Some details about the `.ws2 ` 
 
-The script is basically consists of a list of opcode and argument like this: 
+The script basically consists of a list of opcodes and arguments like this: 
 
 ```
 [opcode][args][opcode][args]...[end of script][extra params]
@@ -25,7 +25,7 @@ The script is basically consists of a list of opcode and argument like this:
 
 When the engine reads a certain opcode, it will find the number of parameters it has and their types according to the opcode, and then read these parameters in sequence. 
 
-AdvHD has its own enum to distinguish different types of argument, and it uses `VARIANTARG` to store them. 
+AdvHD has its own enum to distinguish different types of arguments, and it uses `VARIANTARG` to store them. 
 
 For more details, you can see the source code.
 
