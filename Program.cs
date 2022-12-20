@@ -824,88 +824,38 @@ namespace ws2Parse
                 else
                 {
                     StringBuilder sb2 = new StringBuilder();
-                    
-                    if(arg.data.GetType() == typeof(List<byte>))
+
+                    if (arg.data is IList list)
                     {
-                        if (arg.data is List<byte> tdata)
+                        string typ = arg.data switch
                         {
-                            sb2.Append(string.Format("byte a{0}[{1}] = {{ ", arrc, tdata.Count));
-                            foreach (var t in tdata)
+                            List<byte> => "byte",
+                            List<short> => "short",
+                            List<ushort> => "unsigned short",
+                            List<int> => "int",
+                            List<uint> => "unsigned int",
+                            List<float> => "float",
+                            List<string> => "string",
+                            _ => throw new Exception("type of arg.data is not valid"),
+                        };
+                        sb2.Append(string.Format("{0} a{1}[{2}] = {{ ", typ, arrc, list.Count));
+
+                        if(typ == "string")
+                        {
+                            foreach (var elm in list)
                             {
-                                sb2.Append(string.Format("{0}, ", t));
+                                sb2.Append(string.Format("{0}, ", elm));
+                            }
+                        }
+                        else
+                        {
+                            foreach (var elm in list)
+                            {
+                                sb2.Append(string.Format("\"{0}\", ", elm));
                             }
                         }
                     }
-                    else if(arg.data.GetType() == typeof(List<short>))
-                    {
-                        if (arg.data is List<short> tdata)
-                        {
-                            sb2.Append(string.Format("short a{0}[{1}] = {{ ", arrc, tdata.Count));
-                            foreach (var t in tdata)
-                            {
-                                sb2.Append(string.Format("{0}, ", t));
-                            }
-                        }
-                    }
-                    else if(arg.data.GetType() == typeof(List<ushort>))
-                    {
-                        if (arg.data is List<ushort> tdata)
-                        {
-                            sb2.Append(string.Format("unsigned short a{0}[{1}] = {{ ", arrc, tdata.Count));
-                            foreach (var t in tdata)
-                            {
-                                sb2.Append(string.Format("{0}, ", t));
-                            }
-                        }
-                    }
-                    else if(arg.data.GetType() == typeof(List<float>))
-                    {
-                        if (arg.data is List<float> tdata)
-                        {
-                            sb2.Append(string.Format("float a{0}[{1}] = {{ ", arrc, tdata.Count));
-                            foreach (var t in tdata)
-                            {
-                                sb2.Append(string.Format("{0}, ", t));
-                            }
-                        }
-                    }
-                    else if(arg.data.GetType() == typeof(List<int>))
-                    {
-                        if (arg.data is List<int> tdata)
-                        {
-                            sb2.Append(string.Format("int a{0}[{1}] = {{ ", arrc, tdata.Count));
-                            foreach (var t in tdata)
-                            {
-                                sb2.Append(string.Format("{0}, ", t));
-                            }
-                        }
-                    }
-                    else if(arg.data.GetType() == typeof(List<uint>))
-                    {
-                        if (arg.data is List<uint> tdata)
-                        {
-                            sb2.Append(string.Format("unsigned int a{0}[{1}] = {{ ", arrc, tdata.Count));
-                            foreach(var t in tdata)
-                            {
-                                sb2.Append(string.Format("{0}, ", t));
-                            }
-                        }
-                    }
-                    else if(arg.data.GetType() == typeof(List<string>))
-                    {
-                        if (arg.data is List<string> tdata)
-                        {
-                            sb2.Append(string.Format("string a{0}[{1}] = {{ ", arrc, tdata.Count));
-                            foreach (var s in tdata)
-                            {
-                                sb2.Append(string.Format("\"{0}\", ", s));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("type of arg.data is not valid");
-                    }
+
                     sb.Append(string.Format("a{0}, ", arrc));
                     arrc++;
                     if (struc.arrdef != null)
