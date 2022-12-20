@@ -238,35 +238,35 @@ namespace ws2Parse
                             {
                                 continue;
                             }
-                        }
-                        if (i == 0)
-                        {
-                            sw.WriteLine(string.Format("☆{0:X8}☆☆{1}\n★{0:X8}★★{1}\n", commands[i].args[0].data, commands[i].args[2].data));
-                        }
-                        else
-                        {
-                            if (commands[i - 1].op != 0x15)
+
+                            if (i == 0)
                             {
-                                bool b = false;
-                                //他在有message的时候，除了前面是个选项，其他情况下理论上都会调用一次SetName。所以向前搜索一下看看
-                                for (var t = 1; t <= 2; t++)
-                                {
-                                    if (commands[i - 1 - t].op == 0x15)
-                                    {
-                                        sw.WriteLine(string.Format("☆{0:X8}☆{1}☆{2}\n★{0:X8}★{1}★{2}\n", commands[i].args[0].data, commands[i - 1 - t].args[0].data, commands[i].args[2].data));
-                                        b = true;
-                                        break;
-                                    }
-                                }
-                                //如果真找不到那确实就有点离谱了，可能是没见过的模式，需要Decompile这个脚本然后找到那个位置看看
-                                if(!b) throw new Exception("No name was set before message command.");
+                                sw.WriteLine(string.Format("☆{0:X8}☆☆{1}\n★{0:X8}★★{1}\n", commands[i].args[0].data, s));
                             }
                             else
                             {
-                                sw.WriteLine(string.Format("☆{0:X8}☆{1}☆{2}\n★{0:X8}★{1}★{2}\n", commands[i].args[0].data, commands[i - 1].args[0].data, commands[i].args[2].data));
+                                if (commands[i - 1].op != 0x15)
+                                {
+                                    bool b = false;
+                                    //他在有message的时候，除了前面是个选项，其他情况下理论上都会调用一次SetName。所以向前搜索一下看看
+                                    for (var t = 1; t <= 2; t++)
+                                    {
+                                        if (commands[i - 1 - t].op == 0x15)
+                                        {
+                                            sw.WriteLine(string.Format("☆{0:X8}☆{1}☆{2}\n★{0:X8}★{1}★{2}\n", commands[i].args[0].data, commands[i - 1 - t].args[0].data, s));
+                                            b = true;
+                                            break;
+                                        }
+                                    }
+                                    //如果真找不到那确实就有点离谱了，可能是没见过的模式，需要Decompile这个脚本然后找到那个位置看看
+                                    if (!b) throw new Exception("No name was set before message command.");
+                                }
+                                else
+                                {
+                                    sw.WriteLine(string.Format("☆{0:X8}☆{1}☆{2}\n★{0:X8}★{1}★{2}\n", commands[i].args[0].data, commands[i - 1].args[0].data, s));
+                                }
                             }
                         }
-                        
                     }
                     else if (commands[i].op == 0x0F)
                     {
@@ -274,9 +274,9 @@ namespace ws2Parse
                         {
                             for (var j = 0; j < count; ++j)
                             {
-                                sw.WriteLine("☆{0:X8}☆选项{1}☆{2}\n★{0:X8}★选项{1}★{2}\n", commands[i].args[j * 5 + 1].data, j + 1, commands[i].args[j * 5 + 2].data);
                                 if (commands[i].args[j * 5 + 2].data is string s)
                                 {
+                                    sw.WriteLine("☆{0:X8}☆选项{1}☆{2}\n★{0:X8}★选项{1}★{2}\n", commands[i].args[j * 5 + 1].data, j + 1, s);
                                     single_chars += s.Length;
                                 }
                             }
