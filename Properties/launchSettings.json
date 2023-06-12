@@ -2,7 +2,7 @@
   "profiles": {
     "ws2Parse": {
       "commandName": "Project",
-      "commandLineArgs": "E:\\GalGames_Work\\OnWork\\[诺布尔学园]ココロ＠ファンクション！\\本篇\\RIO"
+      "commandLineArgs": "\"C:\\Users\\ASUS\\Documents\\Tencent Files\\1668911954\\FileRecv\\AdvHD.exe\" \"E:\\GalGames_Work\\OnWork\\个人研究向\\懱尡斉杮懱\\RIO\" \"p\""
     }
   }
 }
