@@ -1,3 +1,33 @@
+
+
+# .ws2脚本工具
+
+#### 注意：这个工具现在还没有写完！（虽然已经可以用来处理文本了）
+
+目前它支持以下功能：
+
+- 加密/解密 `.ws2` 文件 
+- 导出所有对话相关指令的字符串参数（用于翻译）
+- 将上面导出的字符串使用另一种编码导入回去（比如gbk或者utf-8，不过utf8编码支持需要稍微魔改一下游戏主程序才行） 
+- 把 `.ws2` 文件拆成 `.json` 和`.txt`文件（类似于反编译，可以查看脚本里面到底是怎么样的命令）
+- 自动从exe里提取出vm的参数列表数组用于提取文本/反编译（目前还只支持少数几个版本，因为每个版本的特征码都不一样，很烦）
+
+使用方法（命令行）：
+
+```
+ws2Parse.exe [AdvHD的主程序的路径（不支持加壳的版本）] [存放ws2文件的文件夹路径] [功能（d：解包|r：封包）]
+```
+
+使用例：
+
+```
+ws2Parse.exe "E:\Game\AdvHD.exe" "E:\Game\Rio" "d"
+```
+
+---
+
+
+
 # A tool for AdvHD's `.ws2` script
 
 #### NOTE: This tool is not completed yet! 
@@ -8,6 +38,7 @@ Currently, it implements the following features:
 - Export strings related to message command(for translation) 
 - Import strings with a different encoding(gbk, utf-8) 
 - Disassemble `.ws2` file into `.json` file 
+- Automatically extract vm functions' arguments layout from exe(only support a few versions)
 
 ***
 
