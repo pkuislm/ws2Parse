@@ -90,18 +90,12 @@ namespace ws2Parse
 
         public void Decompile(string BaseName)
         {
-            //StringBuilder sb = new();
             int arrc = 0;
             using (StreamWriter sw = new StreamWriter(Path.ChangeExtension(BaseName, ".dis.txt")))
             {
                 foreach (CLegacyFunctions.Command cmd in commands)
                 {
                     var tmp = CLegacyFunctions.ParseArgs(cmd.op, ref arrc, cmd.args);
-
-                    //sb.Append(tmp.arrdef);
-                    //sb.Append(cmd.name);
-                    //sb.Append(tmp.closure);
-                    //sb.Append('\n');
                     sw.Write($"{tmp.arrdef}{cmd.name}{tmp.closure}");
                 }
                 
