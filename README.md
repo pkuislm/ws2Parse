@@ -70,16 +70,9 @@ void FillCLegacyFunctions(legacygame *this)
 
 `ws2`指令在被执行之前，必须要得到他的参数。一条`ws2`指令可以消耗一个或多个参数，无论这个指令使用了多少参数，`AdvHD`都会将他们存入`std::vector`中。由于每个参数都会使用`VARIANTARG`保存，即该`vector`的类型为`std::vector<VARIANTARG>`。
 
-那么`AdvHD`是怎么知道某个指令到底有哪些参数、每个参数又是什么样的类型的呢？原来，`AdvHD`主程序内部硬编码了一个数组，这个数组存储着每个指令所对应的参数类型数组的指针。`AdvHD`会在这里用下标获得每个指令所需的参数。对应到代码中如下：
+那么`AdvHD`是怎么知道某个指令到底有哪些参数、每个参数又是什么样的类型的呢？原来，`AdvHD`主程序内部硬编码了一个数组，这个数组存储着每个指令所对应的参数类型数组的指针。`AdvHD`会在这个数组中用下标获得每个指令所需的参数列表，并根据这个列表逐个从脚本中取得参数，而`vm`的`vmeip`随之后移。
 
-```c
-byte a[] = { 0x1, 0x2, 0xFF };
-byte b[] = { 0x1, 0x2, 0x03, 0xFF };
-byte c[] = { 0x1, 0x2, 0x04, 0x05, 0xFF };
-//...
-
-static byte* arg_types[256] = { a, b, c };
-```
+若当前指令所需的所有参数均正确读入，则读取完成后，`vmeip`正好指向下一条`ws2`指令的头部。
 
 `ws2`共有如下参数类型：
 
@@ -92,12 +85,30 @@ static byte* arg_types[256] = { a, b, c };
 | ARG_VT_UI4   | 0x04   | unsigned int   | 4                |                                                              |
 | ARG_VT_R4    | 0x05   | float          | 4                |                                                              |
 | ARG_STR1     | 0x06   | char*          | 不定长           |                                                              |
-| ARG_ARRAY    | 0x07   |                | 1                | 不单独出现，其在参数列表中的后一个参数类型代表该数组的元素类型 |
-| ARG_PERIOD   | 0x08   | '\0'           | 1                | 不单独出现，必定在`ARG_STR1`或`ARG_STR2`或`ARG_STR3`的后面   |
+| ARG_ARRAY    | 0x07   |                | 1                | 不单独出现，参数为数组长度，其在参数列表中的后一个参数类型代表该数组的元素类型 |
+| ARG_PERIOD   | 0x08   | '\0'           | 1                | 不单独出现，必定在`ARG_STR1`或`ARG_STR2`或`ARG_STR3`后面（也就是字符串结束符啦） |
 | ARG_STR2     | 0x09   | char*          | 不定长           |                                                              |
-| ARG_STR3     | 0a0A   | char*          | 不定长           |                                                              |
+| ARG_STR3     | 0x0A   | char*          | 不定长           |                                                              |
 | ARG_CALLBACK | 0xFE   |                | 不定长           | 参数内容是一条ws2指令，通常用于选项跳转                      |
 | ARG_END      | 0xFF   |                | 0                | 代表参数列表结尾，遇到该值时停止获取参数                     |
+
+参数列表数组对应到代码中如下所示：
+
+```c
+byte a[] = { 0xFF };//没有参数的指令
+byte b[] = { 0x0, 0xFF };//一个参数，参数类型是byte的指令
+byte c[] = { 0x07, 0x3, 0xFF };//参数类型是一个int数组
+byte d[] = { 0x00, 0x06, 0x08, 0xFF };//参数类型是一个byte和一个字符串
+//...
+
+static byte* arg_types[256];
+
+arg_types[0] = a;
+arg_types[1] = b;
+arg_types[2] = c;
+arg_types[3] = d;
+//...
+```
 
 因为我们的最终目标是翻译游戏，因此我们将目光聚焦在这三个字符串类型上。通过对`AdvHD`的代码的分析我们可以知道，游戏内显示的文本其类型为`ARG_STR1`。我们找到处理该参数读入的代码处查看具体实现：
 
