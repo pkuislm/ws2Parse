@@ -2,7 +2,7 @@
   "profiles": {
     "ws2Parse": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\ASUS\\Documents\\Tencent Files\\1668911954\\FileRecv\\AdvHD.exe\" \"E:\\GalGames_Work\\OnWork\\个人研究向\\懱尡斉杮懱\\RIO\" \"p\""
+      "commandLineArgs": "\"E:\\GalGames_Work\\OnWork\\个人研究向\\懱尡斉杮懱\\AdvHD.exe\" \"E:\\GalGames_Work\\OnWork\\个人研究向\\懱尡斉杮懱\\RIO\" \"p\""
     }
   }
 }

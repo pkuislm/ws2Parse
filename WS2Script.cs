@@ -115,6 +115,19 @@ namespace ws2Parse
             }
         }
 
+        //Notice that in the future version of AdvHD, you probably need to add more vm opcodes here to ensure offset capabilities
+        //Format: {opcode, [positions of the arg that represent a offset]}
+        readonly Dictionary<byte, List<int>> offsetFixList = new Dictionary<byte, List<int>>()
+        {
+            //Conditional jump
+            { 0x01, new List<int>{ 3, 4 } },
+            //jump
+            { 0x02, new List<int>{ 0 } },
+            { 0x06, new List<int>{ 0 } },
+            //For 19910
+            { 0xE6, new List<int>{ 0, 1 } },
+        };
+
         public void Assemble(string BaseName, bool encrypt = false)
         {
             using (MemoryStream ms = new())
@@ -127,7 +140,7 @@ namespace ws2Parse
                 {
                     //i.offset.cur = (int)ms.Position;
                     offset_dic.Add(commands[i].offset.old, (uint)ms.Position);
-                    if (commands[i].op == 1 || commands[i].op == 2 || commands[i].op == 6)
+                    if (offsetFixList.ContainsKey(commands[i].op))
                     {
                         offset_offsets.Add(i, (int)ms.Position);
                     }
@@ -136,21 +149,19 @@ namespace ws2Parse
                 //ms.WriteByte(0xFF);
                 ms.Write(param);
 
-                //fix jumps (Notice that in the future version of AdvHD, you probably need to add more vm functions here to ensure offset capabilities)
+                //fix jumps
                 foreach (var i in offset_offsets.Keys)
                 {
                     ms.Seek(offset_offsets[i], SeekOrigin.Begin);
-                    switch (commands[i].op)
+
+                    if(offsetFixList.TryGetValue(commands[i].op, out List<int>? idxes))
                     {
-                        case 1:
-                            if (commands[i].args[3].data is uint dst1) commands[i].args[3].data = offset_dic[dst1];
-                            if (commands[i].args[4].data is uint dst2) commands[i].args[4].data = offset_dic[dst2];
-                            break;
-                        case 2:
-                        case 6:
-                            if (commands[i].args[0].data is uint dst3) commands[i].args[0].data = offset_dic[dst3];
-                            break;
+                        foreach(var idx in idxes)
+                        {
+                            if(commands[i].args[idx].data is uint val) commands[i].args[idx].data = offset_dic[val];
+                        }
                     }
+
                     ms.Write(commands[i].GetBytes());
                 }
 

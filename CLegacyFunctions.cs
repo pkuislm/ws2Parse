@@ -441,20 +441,20 @@ namespace ws2Parse
         {
             using (StreamWriter sw = new StreamWriter(path))
             {
-                foreach(var arg in func_args)
+                for(int i = 0; i < 256; i++)
                 {
-                    if(arg.Length != 0)
+                    if (func_args[i].Length != 0)
                     {
                         StringBuilder sb = new StringBuilder();
-                        foreach(var t in arg)
+                        foreach(var t in func_args[i])
                         {
                             sb.Append(t.ToString() + ", ");
                         }
-                        sw.WriteLine(sb.ToString().Substring(0, sb.Length-2));
+                        sw.WriteLine($"{i:X2} {sb.ToString().Substring(0, sb.Length-2)}");
                     }
                     else
                     {
-                        sw.WriteLine("Empty");
+                        sw.WriteLine($"{i:X2} Empty");
                     }
                 }
                 sw.Flush();
@@ -472,7 +472,8 @@ namespace ws2Parse
             { 0x07, "//JumpTarget( string target_script_name );\nJumpTarget" },
             { 0x0F, "//Selection( byte count );\nSelection"},
             { 0x14, "//Message( uint index, string type? string text );\nMessage" },
-            { 0x15, "//SetName( string name );\nSetName" }
+            { 0x15, "//SetName( string name );\nSetName" },
+            { 0x33, "//SetLayer( string layerName, string graphName );\nSetLayer" }
         };
 
         public class Argstruc
@@ -486,7 +487,7 @@ namespace ws2Parse
             if (func_name.ContainsKey(op))
                 return func_name[op];
             else
-                return $"F_{op:X2}";
+                return $"Function_{op:X2}";
         }
 
         public static Argstruc ParseArgs(byte command, ref int arrc, List<Arg> args)
