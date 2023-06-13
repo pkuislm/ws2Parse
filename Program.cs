@@ -124,12 +124,14 @@ namespace ws2Parse
             {
                 foreach (string file in Directory.EnumerateFiles(input, "*.ws2", SearchOption.TopDirectoryOnly))
                 {
+                    Console.WriteLine($"Processing: {file}");
                     ws.Load(file, decrypt);
                     ws.Decompile(file);
                 }
             }
             else
             {
+                Console.WriteLine($"Processing: {input}");
                 ws.Load(input, decrypt);
                 ws.Decompile(input);
             }
