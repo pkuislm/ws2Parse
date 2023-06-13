@@ -2,7 +2,7 @@
 
 # .ws2脚本工具
 
-#### 注意：这个工具现在还没有写完！（虽然已经可以用来处理文本了）
+#### 注意：这个工具现在还没有写完！现在只支持1.9.9.10及某些更旧的版本（虽然已经可以用来处理文本了）
 
 目前它支持以下功能：
 
@@ -30,7 +30,7 @@ ws2Parse.exe "E:\Game\AdvHD.exe" "E:\Game\Rio" "d"
 
 # A tool for AdvHD's `.ws2` script
 
-#### NOTE: This tool is not completed yet! 
+#### NOTE: This tool is not completed yet!  It only supports AdvHD v1.9.9.10 and some older versions.
 
 Currently, it implements the following features: 
 
