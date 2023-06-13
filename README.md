@@ -105,7 +105,7 @@ static byte* arg_types[256] = { a, b, c };
 
 我们能看到三种类型的字符串都在使用同一个逻辑。点开`sub_4A8030`看看：
 
-![image-20230613194548453](https://github.com/pkuislm/ws2Parse/blob/master/note_imgs/image-20230613194524700.png)
+![image-20230613194548453](https://github.com/pkuislm/ws2Parse/blob/master/note_imgs/image-20230613194548453.png)
 
 可以看到是这里的函数将`ANSI`编码的字符串转换成了`Unicode`字符串，也就是说`AdvHD`内部的编码是`Unicode`的。（新版本的`AdvHD`在这里的编码转换会写成0x3A4也就是CP932，但是除此之外，代码逻辑在各个版本中并没有太大变化。）
 
