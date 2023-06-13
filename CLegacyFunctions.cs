@@ -58,8 +58,8 @@ namespace ws2Parse
                 offset.old = (uint)veip - 1;
                 offset.cur = 0;
                 this.op = op;
+                name = GetFunctionName(op, veip - 1);
                 args = ReadArgs(op, script, ref veip);
-                name = GetFunctionName(op);
             }
 
             public Command(ref int veip, byte op)
@@ -91,7 +91,7 @@ namespace ws2Parse
             ARG_VT_R4 = 5,
             ARG_STR1 = 6,
             ARG_ARRAY = 7,
-            ARG_UNK8 = 8,
+            ARG_PERIOD = 8,
             ARG_STR2 = 9,
             ARG_STR3 = 0x0A,
             //ARG_UTF8STR = 0x0B,
@@ -106,10 +106,10 @@ namespace ws2Parse
             new ArgTypes[]{ ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI4, ArgTypes.ARG_VT_UI4, ArgTypes.ARG_END },//JX
             new ArgTypes[]{ ArgTypes.ARG_VT_UI4, ArgTypes.ARG_END },//JMP
             Array.Empty<ArgTypes>(),
-            new ArgTypes[]{ ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_VT_UI4, ArgTypes.ARG_END },//JMP
-            new ArgTypes[]{ ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
@@ -119,92 +119,92 @@ namespace ws2Parse
             new ArgTypes[]{ ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
             Array.Empty<ArgTypes>(),
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_VT_UI4, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_VT_UI4, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
-            new ArgTypes[]{ ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_ARRAY, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_ARRAY, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_ARRAY, ArgTypes.ARG_STR1, ArgTypes.ARG_END },//string arr
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_I2, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_ARRAY, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1,ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_I2, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_ARRAY, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1,ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
             new ArgTypes[]{ ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
             Array.Empty<ArgTypes>(),
@@ -212,23 +212,23 @@ namespace ws2Parse
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
-            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR2, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR2, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
             new ArgTypes[]{ ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_STR2, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR2, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR2, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_STR2, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR2, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR2, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR2, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
-            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END },
+            new ArgTypes[]{ ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
 #region unused
             Array.Empty<ArgTypes>(),
             Array.Empty<ArgTypes>(),
@@ -353,73 +353,73 @@ namespace ws2Parse
             Array.Empty<ArgTypes>(),
 #endregion unused
             new ArgTypes[] { ArgTypes.ARG_END },
-            new ArgTypes[] { ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
+            new ArgTypes[] { ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
             new ArgTypes[] { ArgTypes.ARG_END },
             new ArgTypes[] { ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END },
             new ArgTypes[] { ArgTypes.ARG_VT_I2, ArgTypes.ARG_END },
             new ArgTypes[] { ArgTypes.ARG_END },
-            new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END },
+            new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END },
             Array.Empty<ArgTypes>()//ScriptEnd
         };
 
         public static void UpdateVM1993()
         {
             //AdvHD ver 1.9.9.3 updated VM Functions
-            func_args[17] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[20] = new ArgTypes[] { ArgTypes.ARG_VT_UI4, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
-            func_args[21] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
+            func_args[17] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[20] = new ArgTypes[] { ArgTypes.ARG_VT_UI4, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
+            func_args[21] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
             func_args[22] = new ArgTypes[] { ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
-            func_args[30] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[40] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[95] = new ArgTypes[] { ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
+            func_args[30] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[40] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[95] = new ArgTypes[] { ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
             func_args[96] = new ArgTypes[] { ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END };
             func_args[97] = new ArgTypes[] { ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[98] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[99] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
-            func_args[105] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[106] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[107] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[108] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[110] = new ArgTypes[] { ArgTypes.ARG_STR2, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[120] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
-            func_args[127] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[128] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[129] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
-            func_args[130] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[131] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[132] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[133] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[134] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[135] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[136] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[140] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
-            func_args[141] = new ArgTypes[] { ArgTypes.ARG_VT_UI4, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[142] = new ArgTypes[] { ArgTypes.ARG_VT_UI4, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[143] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[144] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
+            func_args[98] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[99] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
+            func_args[105] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[106] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[107] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[108] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[110] = new ArgTypes[] { ArgTypes.ARG_STR2, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[120] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
+            func_args[127] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[128] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[129] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
+            func_args[130] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[131] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[132] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[133] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[134] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[135] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[136] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[140] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
+            func_args[141] = new ArgTypes[] { ArgTypes.ARG_VT_UI4, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[142] = new ArgTypes[] { ArgTypes.ARG_VT_UI4, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[143] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[144] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
             func_args[150] = new ArgTypes[] { ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
             func_args[151] = new ArgTypes[] { ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[152] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[153] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
+            func_args[152] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[153] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
             func_args[154] = new ArgTypes[] { ArgTypes.ARG_END };
-            func_args[155] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[156] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[157] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[158] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
-            func_args[159] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
+            func_args[155] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[156] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[157] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[158] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
+            func_args[159] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
             func_args[200] = new ArgTypes[] { ArgTypes.ARG_END };
-            func_args[201] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END };
-            func_args[202] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[203] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
+            func_args[201] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END };
+            func_args[202] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[203] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
             func_args[204] = new ArgTypes[] { ArgTypes.ARG_END };
-            func_args[205] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
+            func_args[205] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
             func_args[206] = new ArgTypes[] { ArgTypes.ARG_VT_UI1, ArgTypes.ARG_END };
-            func_args[207] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
-            func_args[208] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END };
-            func_args[209] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END };
-            func_args[210] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[211] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_UNK8, ArgTypes.ARG_END };
-            func_args[212] = new ArgTypes[] { ArgTypes.ARG_STR3, ArgTypes.ARG_UNK8, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END };
+            func_args[207] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_R4, ArgTypes.ARG_END };
+            func_args[208] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END };
+            func_args[209] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END };
+            func_args[210] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[211] = new ArgTypes[] { ArgTypes.ARG_STR1, ArgTypes.ARG_PERIOD, ArgTypes.ARG_END };
+            func_args[212] = new ArgTypes[] { ArgTypes.ARG_STR3, ArgTypes.ARG_PERIOD, ArgTypes.ARG_VT_I2, ArgTypes.ARG_VT_I2, ArgTypes.ARG_END };
             func_args[230] = new ArgTypes[] { ArgTypes.ARG_VT_UI4, ArgTypes.ARG_VT_UI4, ArgTypes.ARG_END };
             func_args[231] = new ArgTypes[] { ArgTypes.ARG_END };
             func_args[232] = new ArgTypes[] { ArgTypes.ARG_END };
@@ -450,7 +450,7 @@ namespace ws2Parse
                         {
                             sb.Append(t.ToString() + ", ");
                         }
-                        sw.WriteLine($"{i:X2} {sb.ToString().Substring(0, sb.Length-2)}");
+                        sw.WriteLine($"{i:X2} {sb.ToString()[..(sb.Length - 2)]}");
                     }
                     else
                     {
@@ -462,18 +462,18 @@ namespace ws2Parse
             }
         }
 
-        static readonly Dictionary<int, string> func_name = new Dictionary<int, string>()
+        static readonly Dictionary<int, Tuple<string, string>> func_name = new Dictionary<int, Tuple<string, string>>()
         {
-            { 0x01, "//JX( byte flag, short unk1, float unk2, uint dest1, uint dest2 );\nJX" },
-            { 0x02, "//JMP( uint dest );\nJMP" },
-            { 0x04, "//CallFunc( string script_name );\nCallFunc" },
-            { 0x05, "Return" },
-            { 0x06, "//JMP( uint dest );\nJMP" },
-            { 0x07, "//JumpTarget( string target_script_name );\nJumpTarget" },
-            { 0x0F, "//Selection( byte count );\nSelection"},
-            { 0x14, "//Message( uint index, string type? string text );\nMessage" },
-            { 0x15, "//SetName( string name );\nSetName" },
-            { 0x33, "//SetLayer( string layerName, string graphName );\nSetLayer" }
+            { 0x01, new("//JX( byte flag, short unk1, float unk2, uint dest1, uint dest2 );", "JX") },
+            { 0x02, new("//JMP( uint dest );","JMP") },
+            { 0x04, new("//CallFunc( string script_name );","CallFunc") },
+            { 0x05, new("","Return") },
+            { 0x06, new("//JMP( uint dest );","JMP") },
+            { 0x07, new("//JumpTarget( string target_script_name );","JumpTarget") },
+            { 0x0F, new("//Selection( byte count );","Selection") },
+            { 0x14, new("//Message( uint index, string type? string text );","Message") },
+            { 0x15, new("//SetName( string name );","SetName") },
+            { 0x33, new("//SetLayer( string layerName, string graphName );","SetLayer") }
         };
 
         public class Argstruc
@@ -482,12 +482,12 @@ namespace ws2Parse
             public string? arrdef;
         }
 
-        static string GetFunctionName(int op)
+        static string GetFunctionName(int op, int addr)
         {
             if (func_name.ContainsKey(op))
-                return func_name[op];
+                return $"{func_name[op].Item1}\n{addr:d08}: {func_name[op].Item2}";
             else
-                return $"Function_{op:X2}";
+                return $"{addr:d08}: Function_{op:X2}";
         }
 
         public static Argstruc ParseArgs(byte command, ref int arrc, List<Arg> args)
@@ -500,7 +500,7 @@ namespace ws2Parse
             for (; i < limit; i++)
             {
                 var arg = args[i];
-                if (arg.GetArgType() == ArgTypes.ARG_UNK8)
+                if (arg.GetArgType() == ArgTypes.ARG_PERIOD)
                 {
                     continue;
                 }
@@ -601,7 +601,7 @@ namespace ws2Parse
                     case ArgTypes.ARG_VT_UI1:
                         ret.Add(new Arg(arg, script[veip++]));
                         break;
-                    case ArgTypes.ARG_UNK8:     //for null-terminated str's '\0' ?
+                    case ArgTypes.ARG_PERIOD:     //for null-terminated str's '\0'
                         veip++;
                         break;
                     case ArgTypes.ARG_VT_I2:
